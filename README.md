@@ -160,6 +160,38 @@ Returning:
 </div>
 ```
 
+### Sidecar Assets
+
+ViewComponents supports two options for defining view files.
+
+#### Sidecar view
+
+The simplest option is to place the view next to the Ruby component:
+
+```
+app/components
+├── ...
+├── test_component.rb
+├── test_component.html.erb
+├── ...
+```
+
+#### Sidecar directory
+
+As an alternative, views and other assets can be placed in a sidecar directory with the same name as the component, which can be useful for organizing views alongside other assets like Javascript and CSS.
+
+```
+app/components
+├── ...
+├── test_component.rb
+├── test_component
+|   ├── test_component.css
+|   ├── test_component.html.erb
+|   └── test_component.js
+├── ...
+
+```
+
 ### Inline Component
 
 ViewComponents can render without a template file, by defining a `call` method:
@@ -191,36 +223,37 @@ class InlineVariantComponent < ViewComponent::Base
 end
 ```
 
-### Sidecar Assets
+#### Multiple templates
 
-ViewComponents supports two options for defining view files. 
-
-#### Sidecar view
-
-The simplest option is to place the view next to the Ruby component:
-
-```
-app/components
-├── ...
-├── test_component.rb
-├── test_component.html.erb
-├── ...
-```
-
-#### Sidecar directory
-
-As an alternative, views and other assets can be placed in a sidecar directory with the same name as the component, which can be useful for organizing views alongside other assets like Javascript and CSS.
+ViewComponents can render multiple templates defined in the sidecar directory:
 
 ```
 app/components
 ├── ...
 ├── test_component.rb
 ├── test_component
-|   ├── test_component.css
-|   ├── test_component.html.erb
-|   └── test_component.js
+|   ├── list.html.erb
+|   └── summary.html.erb
 ├── ...
+```
 
+Templates are compiled to methods in the format `call_#{template_basename}`, which can then be called in the component.
+
+```ruby
+class TestComponent < ViewComponent::Base
+  def initialize(mode:)
+    @mode = mode
+  end
+
+  def call
+    case @mode
+    when :list
+      call_list
+    when :summary
+      call_summary
+    end
+  end
+end
 ```
 
 ### Conditional Rendering

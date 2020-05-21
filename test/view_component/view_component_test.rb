@@ -546,6 +546,18 @@ class ViewComponentTest < ViewComponent::TestCase
     assert_match(/MissingDefaultCollectionParameterComponent initializer must accept `missing_default_collection_parameter` collection parameter/, exception.message)
   end
 
+  def test_render_multiple_templates
+    render_inline(MultipleTemplatesComponent.new(mode: :list))
+
+    assert_selector("li", text: "Apple")
+    assert_selector("li", text: "Banana")
+    assert_selector("li", text: "Pear")
+
+    render_inline(MultipleTemplatesComponent.new(mode: :summary))
+
+    assert_selector("div", text: "Apple, Banana, and Pear")
+  end
+
   private
 
   def modify_file(file, content)

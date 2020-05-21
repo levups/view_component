@@ -1,5 +1,11 @@
 # master
 
+# 2.8.0
+
+* Add support for multiple templates.
+
+    *Rob Sterner*, *Joel Hawksley*
+
 # 2.7.0
 
 * Add `rendered_component` method to `ViewComponent::TestHelpers` which exposes the raw output of the rendered component.
